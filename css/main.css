@@ -77,3 +77,13 @@ Note the color choice becuase it stands out!
   opacity: 1;
   right: 0;
 }
+
+.myform {
+  background-color:#41821f; 
+  font-size: large; 
+  font-weight: bold;
+}
+
+.myform p {
+  text-align: center;
+}
