@@ -75,7 +75,7 @@ $(function(){
 
     var querystring = $('#term').val();
     var nytApiKey = "5f70a7d1b2364f43b4b63b3248451bb4";
-    var fl = "web_url, headline, pub_date, document_type, multimedia, type_of_material";
+    var fl = "web_url, headline, pub_date, document_type, multimedia, type_of_material, snippet";
     $.ajax({
       url: 'http://api.nytimes.com/svc/search/v2/articlesearch.json',
       data: {
@@ -93,7 +93,7 @@ $(function(){
               // passed function object for data processing 
 
               var columns=[];
-              var titles = {"headline": 'Headline', 'web_url':'Link',  "pub_date" : "Date Originally Published" , "multimedia": 'Image' , "type_of_material": "Section", "document_type":"Document Type", "score" : "score"}
+              var titles = {"headline": 'Headline', 'web_url':'Link',  "pub_date" : "Date Originally Published" , "multimedia": 'Image' , "type_of_material": "Section", "document_type":"Document Type", "score" : "score", snippet: "snippet"}
               for (var k in data.response.docs[0])
               {
                   columns[columns.length] = {title:titles[k], data:k, defaultContent:"-"};
@@ -125,13 +125,15 @@ $(function(){
 </script>
 <script>
   $(document).ready(function() {
+    
     // I like to have defaults, so
   var queryString = "Trump";
   var nytApiKey = "5f70a7d1b2364f43b4b63b3248451bb4";
-  var fl = "web_url, headline, pub_date, document_type, multimedia, type_of_material"
+  var fl = "web_url, headline, pub_date, document_type, multimedia, type_of_material, snippet"
   var page = '0';
 
       $.ajax({
+
           
           'type': 'GET',
           'url': 'http://api.nytimes.com/svc/search/v2/articlesearch.json',
@@ -151,7 +153,7 @@ $(function(){
               console.log(TotalHits, offset_total)
 
               var columns=[];
-              var titles = {"headline": 'Headline', 'web_url':'Link',  "pub_date" : "Date Originally Published" , "multimedia": 'Image' , "type_of_material": "Section", "document_type":"Document Type", "score" : "score"}
+              var titles = {"headline": 'Headline', 'web_url':'Link',  "pub_date" : "Date Originally Published" , "multimedia": 'Image' , "type_of_material": "Section", "document_type":"Document Type", "score" : "score", snippet: "snippet"}
               for (var k in data.response.docs[0])
               {
                   columns[columns.length] = {title:titles[k], data:k, defaultContent:"-"};
@@ -160,8 +162,10 @@ $(function(){
                       
                   }
                   if (k == "score") {
-                      columns[columns.length-1]["visible"] = false;
-                      
+                      columns[columns.length-1]["visible"] = false; 
+                  }
+                  if (k == "snippet") {
+                      columns[columns.length-1]["visible"] = false; 
                   }
                   if (k == "multimedia") {
                       columns[columns.length-1]["visible"] = false;            
@@ -170,7 +174,13 @@ $(function(){
                       columns[columns.length-1]["render"] = function( data, type, row, meta ) {
                         var main_headline=data.main;
                         var urllink = row.web_url;
-                        return '<a target="_blank" href="' + urllink + '"><button type="button" class="btn btn-outline-primary">'+main_headline+'</button></a>';
+                        var snippet = row.snippet;
+                        
+                        return '<a target="_blank" href="' + urllink + 
+                               '"><button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="left" title="'+
+                                  snippet +'">' +
+                                  main_headline +
+                                '</button></a>';
                       }
                   }
                   if (k == "pub_date") {
